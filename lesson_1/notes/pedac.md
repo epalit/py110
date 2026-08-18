@@ -16,6 +16,9 @@ rules:
 
 questions:
   -
+
+assumptions:
+  - 
 ```
 
 ## E: Examples / Test cases
