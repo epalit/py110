@@ -32,7 +32,7 @@ def prompt(message):
 def player_chooses_square(board):
     while True:
         valid_choices = [str(num) for num in empty_squares(board)]
-        prompt(f'Choose a square ({', '.join(valid_choices)}):')
+        prompt(f'Choose a square ({join_or(valid_choices)}):')
         square = input().strip()
         if square in valid_choices:
             break
@@ -76,6 +76,20 @@ def detect_winner(board):
             return 'Computer'
 
     return None
+
+def join_or(elements, sep=',', final_sep='or'):
+  if len(elements) == 0:
+    return ""
+
+  if len(elements) == 1:
+    return str(elements[0])
+
+  if len(elements) == 2:
+    return f" {final_sep} ".join(str(e) for e in elements)
+
+  last_element = elements[-1]
+  elements_str = f"{sep} ".join(str(e) for e in elements[0:-1])
+  return f"{elements_str} {final_sep} {last_element}"
 
 def play_tic_tac_toe():
     while True:
