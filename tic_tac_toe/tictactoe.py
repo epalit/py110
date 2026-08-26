@@ -11,7 +11,7 @@ WINNING_LINES = [
         [1, 4, 7], [2, 5, 8], [3, 6, 9],  # columns
         [1, 5, 9], [3, 5, 7]              # diagonals
 ]
-AI_LEVEL = 2 # 1: random, 2: defensive
+AI_LEVEL = 3 # 1: random, 2: defensive, 3: offensive
 
 def display_scores(scores):
     for result, tally in scores.items():
@@ -71,28 +71,47 @@ def player_chooses_square(board):
 
     board[int(square)] = HUMAN_MARKER
 
-def find_threatened_square(line):
-    if line.count(HUMAN_MARKER) == 2:
+def find_threatened_square(line, marker):
+    if line.count(marker) == 2:
         return line.index(INITIAL_MARKER) if INITIAL_MARKER in line else None
 
 def find_threats(board):
     threats = []
 
     for line in WINNING_LINES:
-        square_at_threat = find_threatened_square([board[sq] for sq in line])
+        square_at_threat = find_threatened_square(
+            [board[sq] for sq in line],
+            HUMAN_MARKER
+        )
         if square_at_threat is not None:
             threats.append(line[square_at_threat])
 
     return threats
+
+def find_attacks(board):
+    attacks = []
+
+    for line in WINNING_LINES:
+        square_for_attack = find_threatened_square(
+            [board[sq] for sq in line],
+            COMPUTER_MARKER
+        )
+        if square_for_attack is not None:
+            attacks.append(line[square_for_attack])
+
+    return attacks
 
 def computer_chooses_square(board):
     if len(empty_squares(board)) == 0:
         return
 
     threats = find_threats(board)
+    attacks = find_attacks(board)
 
     if AI_LEVEL > 1 and threats:
         square = random.choice(threats)
+    elif AI_LEVEL > 2 and attacks:
+        square = random.choice(attacks)
     else:
         square = random.choice(empty_squares(board))
 
