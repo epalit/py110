@@ -5,6 +5,7 @@ INITIAL_MARKER = ' '
 HUMAN_MARKER = 'X'
 COMPUTER_MARKER = 'O'
 MATCH_WINNING_GAME_NUM = 5
+DISPLAY_GUIDE_BOARD = True
 
 def display_scores(scores):
     for result, tally in scores.items():
@@ -14,6 +15,22 @@ def display_board_and_scores(board, scores):
     subprocess.run(["clear"])
 
     prompt(f"You are {HUMAN_MARKER}. Computer is {COMPUTER_MARKER}.")
+
+    if DISPLAY_GUIDE_BOARD:
+        print('')
+        print('     |     |')
+        print(f"  {1}  |  {2}  |  {3}")
+        print('     |     |')
+        print('-----+-----+-----')
+        print('     |     |')
+        print(f"  {4}  |  {5}  |  {6}")
+        print('     |     |')
+        print('-----+-----+-----')
+        print('     |     |')
+        print(f"  {7}  |  {8}  |  {9}")
+        print('     |     |')
+        print('')
+
     print('')
     print('     |     |')
     print(f"  {board[1]}  |  {board[2]}  |  {board[3]}")
