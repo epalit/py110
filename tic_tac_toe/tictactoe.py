@@ -11,7 +11,8 @@ WINNING_LINES = [
         [1, 4, 7], [2, 5, 8], [3, 6, 9],  # columns
         [1, 5, 9], [3, 5, 7]              # diagonals
 ]
-AI_LEVEL = 3 # 1: random, 2: defensive, 3: offensive
+AI_LEVEL = 3 # 0: random, 1: prefer central square , 2: defensive, 3: offensive
+CENTRAL_SQUARE = 5
 
 def display_scores(scores):
     for result, tally in scores.items():
@@ -112,6 +113,8 @@ def computer_chooses_square(board):
         square = random.choice(attacks)
     elif AI_LEVEL > 1 and threats:
         square = random.choice(threats)
+    elif AI_LEVEL > 0 and board[CENTRAL_SQUARE] == INITIAL_MARKER:
+        square = CENTRAL_SQUARE
     else:
         square = random.choice(empty_squares(board))
 
