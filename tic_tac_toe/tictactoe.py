@@ -108,10 +108,10 @@ def computer_chooses_square(board):
     threats = find_threats(board)
     attacks = find_attacks(board)
 
-    if AI_LEVEL > 1 and threats:
-        square = random.choice(threats)
-    elif AI_LEVEL > 2 and attacks:
+    if AI_LEVEL > 2 and attacks:
         square = random.choice(attacks)
+    elif AI_LEVEL > 1 and threats:
+        square = random.choice(threats)
     else:
         square = random.choice(empty_squares(board))
 
