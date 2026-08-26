@@ -170,8 +170,13 @@ def join_or(elements, sep=',', final_sep='or'):
   return f"{elements_str} {final_sep} {last_element}"
 
 def play_again():
-    prompt("Play again? (y or n)")
-    return input().strip().lower()[0]
+    while True:
+        prompt("Play again? (y or n)")
+        choice = input().strip().lower()
+        if choice in ['y', 'n']:
+            return choice
+        else:
+            prompt("Invalid choice, choose again.")
 
 def initialize_scores():
     return {"Player" : 0, "Computer" : 0, "Tie": 0}
