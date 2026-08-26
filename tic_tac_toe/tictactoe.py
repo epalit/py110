@@ -13,6 +13,7 @@ WINNING_LINES = [
 ]
 AI_LEVEL = 3 # 0: random, 1: prefer central square , 2: defensive, 3: offensive
 CENTRAL_SQUARE = 5
+FIRST_MOVE = 'choose' # player, computer, choose
 
 def display_scores(scores):
     for result, tally in scores.items():
@@ -182,21 +183,46 @@ def reset_scores(scores):
     for result in scores:
         scores[result] = 0
 
+def next_move(turn, board):
+    if turn == 'player':
+        player_chooses_square(board)
+    else:
+        computer_chooses_square(board)
+
+def get_first_move():
+    if FIRST_MOVE == 'choose':
+        choice_map = {'c': 'computer', 'p': 'player'}
+        while True:
+            choice = input(
+                "Who starts? (c for computer, p for player) "
+            ).strip().lower()
+            if len(choice) and choice[0] in ['c', 'p']:
+                return choice_map[choice[0]]
+            else:
+                prompt("Invalid choice, choose again.")
+
+    else:
+        return FIRST_MOVE
+
+def switch_player(current_player):
+    if current_player == 'player':
+        return 'computer'
+    if current_player == 'computer':
+        return 'player'
+
 def play_tic_tac_toe():
     scores = initialize_scores()
     while True:
         board = initialize_board()
+        turn = get_first_move()
 
         while True:
             display_board_and_scores(board, scores)
 
-            player_chooses_square(board)
+            next_move(turn, board)
             if someone_won(board) or board_full(board):
                 break
-            
-            computer_chooses_square(board)
-            if someone_won(board) or board_full(board):
-                break
+            turn = switch_player(turn)
             
         display_board_and_scores(board, scores)
 
