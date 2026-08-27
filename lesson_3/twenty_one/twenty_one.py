@@ -5,6 +5,10 @@ CARD_NAMES = ['Ace', '2', '3', '4', '5', '6',
               '7', '8', '9', '10', 'Jack', 'Queen', 'King']
 CARD_VALUES = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10]
 INITIAL_HAND_SIZE = 2
+STAY_ACTION_CODE = 's'
+HIT_ACTION_CODE = 'h'
+ACTION_CODE_MAP = {HIT_ACTION_CODE: 'hit', STAY_ACTION_CODE: 'stay'}
+
 
 def prompt(msg):
     print(f'==> {msg}')
@@ -93,9 +97,63 @@ def get_initial_hands():
     return player_hand, dealer_hand
 
 def do_first_deal(player_hand, dealer_hand, deck):
+    prompt("Dealing...")
     for _ in range(INITIAL_HAND_SIZE):
         deal(player_hand, deck)
         deal(dealer_hand, deck)
+
+def player_turn(player_hand, dealer_hand, deck):
+    action = None
+
+    while action != STAY_ACTION_CODE and not is_bust(player_hand):
+        action = player_choose_hit_or_stay()
+
+        if action == HIT_ACTION_CODE:
+            deal(player_hand, deck)
+            declare_hands(player_hand, dealer_hand)
+
+def player_choose_hit_or_stay():
+    while True:
+        prompt(f"Hit or Stay? ({HIT_ACTION_CODE} or {STAY_ACTION_CODE})")
+        choice = input().strip().lower()
+        if choice in [HIT_ACTION_CODE, STAY_ACTION_CODE]:
+            prompt(f"You chose to {ACTION_CODE_MAP[choice]}")
+            return choice
+        else:
+            prompt("Invalid choice, choose again.")
+
+def declare_winner(winner):
+    prompt(f"{winner} wins!")
+
+def dealer_turn():
+    prompt("passing dealer turn")
+
+def declare_hands(player_hand, dealer_hand):
+    player_cards = join_or(
+        [card['name'] for card in player_hand['cards']],
+        final_sep='and')
+
+    dealers_first_card = dealer_hand['cards'][0]
+    dealer_cards = join_or(
+        [dealers_first_card['name'], "unknown card"],
+        final_sep='and')
+
+    prompt(f"You have {player_cards} (hand total is: {player_hand['total']})")
+    prompt(f"Dealer has {dealer_cards}")
+
+def join_or(elements, sep=',', final_sep='or'):
+  if len(elements) == 0:
+    return ""
+
+  if len(elements) == 1:
+    return str(elements[0])
+
+  if len(elements) == 2:
+    return f" {final_sep} ".join(str(e) for e in elements)
+
+  last_element = elements[-1]
+  elements_str = f"{sep} ".join(str(e) for e in elements[0:-1])
+  return f"{elements_str} {final_sep} {last_element}"
 
 def play_twenty_one():
     prompt('Welcome to Twenty One!')
@@ -103,8 +161,15 @@ def play_twenty_one():
         deck = get_deck()
         player_hand, dealer_hand = get_initial_hands()
         do_first_deal(player_hand, dealer_hand, deck)
-        # player_turn()
-        # dealer_turn()
+
+        declare_hands(player_hand, dealer_hand)
+
+        player_turn(player_hand, dealer_hand, deck)
+        if is_bust(player_hand):
+            prompt(f'You bust! Your hand total was {player_hand['total']}')
+            declare_winner('Dealer')
+        else:
+            dealer_turn()
         # declare_winner()
         if play_again() != 'y':
             break
