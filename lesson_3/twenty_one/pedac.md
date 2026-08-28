@@ -42,13 +42,19 @@ assumptions:
 *Make notes, does not have to be the final version on the first pass*
 Will want to easily remove cards from the deck - list would be ideal. Each element can be a card modelled by a dictionary containing the name, value and suit. This will allow an ace value to be updated dynamically when that card is in a hand.
 
+Each hand should be a list of cards (same dicts as from the deck)
+
 ## A: Algorithm
 1. Initialize deck
   a. build deck from constants representing deck of cards
   b. shuffle deck
 2. Deal cards to player and dealer
+  a. create hands
+  b. deal two cards, alternating one each, recalculate value each time
 3. Player turn: hit or stay
    - repeat until bust or stay
+    - ask hit or stay
+    - if hit, deal a card, calculate value, calculate if bust
 4. If player bust, dealer wins
 5. Dealer turn: hit or stay
    - repeat until total >= 17
