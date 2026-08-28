@@ -1,4 +1,5 @@
 import random
+import time
 
 SUITS = ['spades', 'diamonds', 'clubs', 'hearts']
 CARD_NAMES = ['Ace', '2', '3', '4', '5', '6', 
@@ -13,6 +14,7 @@ DEALER_HIT_MAX = 17
 
 def prompt(msg):
     print(f'==> {msg}')
+    time.sleep(1.5)
 
 def play_again():
     while True:
@@ -158,6 +160,20 @@ def join_or(elements, sep=',', final_sep='or'):
   elements_str = f"{sep} ".join(str(e) for e in elements[0:-1])
   return f"{elements_str} {final_sep} {last_element}"
 
+def declare_result(result):
+    if result == 'draw':
+        prompt("It's a draw!")
+    else:
+        declare_winner(result)
+
+def get_result(player_total, dealer_total):
+    if player_total > dealer_total:
+        return 'Player'
+    elif dealer_total > player_total:
+        return 'Dealer'
+    else:
+        return 'draw'
+
 def play_twenty_one():
     prompt('Welcome to Twenty One!')
     while True:
@@ -174,11 +190,13 @@ def play_twenty_one():
         else:
             dealer_turn(dealer_hand, deck)
 
-        if is_bust(dealer_hand):
-            prompt("Dealer bust")
-            declare_winner('Player')
+            if is_bust(dealer_hand):
+                prompt("Dealer bust")
+                declare_winner('Player')
+            else:
+                result = get_result(player_hand['total'], dealer_hand['total'])
+                declare_result(result)
 
-        # declare_winner()
         if play_again() != 'y':
             break
 
