@@ -8,6 +8,7 @@ INITIAL_HAND_SIZE = 2
 STAY_ACTION_CODE = 's'
 HIT_ACTION_CODE = 'h'
 ACTION_CODE_MAP = {HIT_ACTION_CODE: 'hit', STAY_ACTION_CODE: 'stay'}
+DEALER_HIT_MAX = 17
 
 
 def prompt(msg):
@@ -125,8 +126,10 @@ def player_choose_hit_or_stay():
 def declare_winner(winner):
     prompt(f"{winner} wins!")
 
-def dealer_turn():
-    prompt("passing dealer turn")
+def dealer_turn(dealer_hand, deck):
+    while dealer_hand['total'] < DEALER_HIT_MAX and not is_bust(dealer_hand):
+        prompt("Dealer chose to hit")
+        deal(dealer_hand, deck)
 
 def declare_hands(player_hand, dealer_hand):
     player_cards = join_or(
@@ -169,7 +172,12 @@ def play_twenty_one():
             prompt(f'You bust! Your hand total was {player_hand['total']}')
             declare_winner('Dealer')
         else:
-            dealer_turn()
+            dealer_turn(dealer_hand, deck)
+
+        if is_bust(dealer_hand):
+            prompt("Dealer bust")
+            declare_winner('Player')
+
         # declare_winner()
         if play_again() != 'y':
             break
