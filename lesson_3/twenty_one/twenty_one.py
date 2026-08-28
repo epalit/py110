@@ -128,23 +128,31 @@ def player_choose_hit_or_stay():
 def declare_winner(winner):
     prompt(f"{winner} wins!")
 
-def dealer_turn(dealer_hand, deck):
+def dealer_turn(dealer_hand, player_hand, deck):
+    declare_hands(player_hand, dealer_hand, reveal_dealer=True)
     while dealer_hand['total'] < DEALER_HIT_MAX and not is_bust(dealer_hand):
         prompt("Dealer chose to hit")
         deal(dealer_hand, deck)
+        declare_hands(player_hand, dealer_hand, reveal_dealer=True)
 
-def declare_hands(player_hand, dealer_hand):
+def declare_hands(player_hand, dealer_hand, reveal_dealer=False):
     player_cards = join_or(
         [card['name'] for card in player_hand['cards']],
         final_sep='and')
 
-    dealers_first_card = dealer_hand['cards'][0]
-    dealer_cards = join_or(
-        [dealers_first_card['name'], "unknown card"],
-        final_sep='and')
-
     prompt(f"You have {player_cards} (hand total is: {player_hand['total']})")
-    prompt(f"Dealer has {dealer_cards}")
+
+    if reveal_dealer:
+        dealer_cards = join_or(
+                [card['name'] for card in dealer_hand['cards']],
+                final_sep='and')
+        prompt(f"Dealer has {dealer_cards} (hand total is: {dealer_hand['total']})")
+    else:
+        dealers_first_card = dealer_hand['cards'][0]
+        dealer_cards = join_or(
+            [dealers_first_card['name'], "unknown card"],
+            final_sep='and')
+        prompt(f"Dealer has {dealer_cards}")
 
 def join_or(elements, sep=',', final_sep='or'):
   if len(elements) == 0:
@@ -185,10 +193,11 @@ def play_twenty_one():
 
         player_turn(player_hand, dealer_hand, deck)
         if is_bust(player_hand):
-            prompt(f'You bust! Your hand total was {player_hand['total']}')
+            prompt(f'You bust!')
+            declare_hands(player_hand, dealer_hand, reveal_dealer=True)
             declare_winner('Dealer')
         else:
-            dealer_turn(dealer_hand, deck)
+            dealer_turn(dealer_hand, player_hand, deck)
 
             if is_bust(dealer_hand):
                 prompt("Dealer bust")
