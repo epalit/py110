@@ -1,0 +1,39 @@
+"""
+#Problem
+input: string
+output: list of strings, each string is a word, space and len(word)
+reqs:
+- empty string results in empty list
+- no argument results in empty list
+- all words are separated by single space
+- punctuation counts in the length
+
+# Algorithm
+1. split the string into a list
+2. in a list comp for each word, turn into f string with word + space + len(word)
+3. return list
+"""
+
+def word_lengths(string=""):
+    return [f"{word} {len(word)}" for word in string.split()]
+
+# All of these examples should print True
+words = 'cow sheep chicken'
+expected_result = ['cow 3', 'sheep 5', 'chicken 7']
+print(word_lengths(words) == expected_result)        # True
+
+words = 'baseball hot dogs and apple pie'
+expected_result = ['baseball 8', 'hot 3', 'dogs 4',
+                   'and 3', 'apple 5', 'pie 3']
+print(word_lengths(words) == expected_result)        # True
+
+words = "It ain't easy, is it?"
+expected_result = ['It 2', "ain't 5", 'easy, 5',
+                   'is 2', 'it? 3']
+print(word_lengths(words) == expected_result)        # True
+
+big_word = 'Supercalifragilisticexpialidocious'
+print(word_lengths(big_word) == [f'{big_word} 34'])  # True
+
+print(word_lengths('') == [])                        # True
+print(word_lengths() == [])                          # True
